@@ -4,13 +4,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FilesService } from 'src/app/services/files.service';
 import { SolicitudService } from 'src/app/services/solicitud.service';
 import { Solicitud } from 'src/app/models/solicitud.model';
+import { TipoDoc } from 'src/app/interfaces/generic.interface';
 import * as moment from 'moment';
 import Swal from 'sweetalert2';
-
-interface TipoDoc {
-  id: number;
-  value: string;
-}
 
 @Component({
   selector: 'app-solicitud',
@@ -163,20 +159,7 @@ export class SolicitudComponent implements OnInit {
       response => {
         if (response) {
           this.enviarCorreo(response);
-
-          Swal.fire({
-            title: 'AVISO',
-            text: 'Solicitud registrada correctamente',
-            icon: 'success',
-            confirmButtonColor: '#bf0909',
-            confirmButtonText: 'ACEPTAR',
-            allowOutsideClick: false,
-            allowEscapeKey: false
-          }).then((result) => {
-            if (result.value) {
-              window.location.reload();
-            }
-          });
+          this.mostrarMensaje();
         } else {
           this.snackBar.open('Error al registrar la solicitud', 'ERROR', { duration: 2000 });
         }
@@ -189,6 +172,22 @@ export class SolicitudComponent implements OnInit {
     let host = window.location.href;
     let webUrl = host.replace('/#/solicitud', '');
     this.solicitudService.enviarCorreo(idSolicitud, webUrl).subscribe();
+  }
+
+  mostrarMensaje() {
+    Swal.fire({
+      title: 'AVISO',
+      text: 'Solicitud registrada correctamente',
+      icon: 'success',
+      confirmButtonColor: '#bf0909',
+      confirmButtonText: 'ACEPTAR',
+      allowOutsideClick: false,
+      allowEscapeKey: false
+    }).then((result) => {
+      if (result.value) {
+        window.location.reload();
+      }
+    });
   }
 
 }
